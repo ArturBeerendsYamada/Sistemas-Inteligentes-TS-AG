@@ -38,7 +38,7 @@ if __name__ == "__main__":
     os.makedirs(output_dir, exist_ok=True)
 
     # Save the matrix to a file named <n>.txt in the ../input directory
-    output_file = os.path.join(output_dir, f"{n}.csv")
+    output_file = os.path.join(output_dir, f"matriz_size_{n}.csv")
     save_matrix_to_file(matrix, output_file)
 
     print(f"Matrix saved to {output_file}")
