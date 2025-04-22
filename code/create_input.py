@@ -7,8 +7,8 @@ def create_matrix(n):
     for i in range(n):
         for j in range(i + 1, n):
             value = random.randint(-100, 1000)
-            if value == 0:
-                value = 1 # Ensure no zero values outside the diagonal
+            if value <= 0:
+                value = sys.maxsize # Use maxsize to represent infinity
             matrix[i][j] = value
             matrix[j][i] = value
     return matrix
