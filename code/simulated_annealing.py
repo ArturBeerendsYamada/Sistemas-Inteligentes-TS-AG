@@ -77,10 +77,10 @@ def solve_execution():
         cost_diff = calculate_cost(current_route) - calculate_cost(candidate_route)
         if cost_diff > 0:
             current_route = candidate_route
-        elif cost_diff < sys.maxsize: # If the cost is greater than this, it's not a valid route
-                prob = math.exp(cost_diff / T_curr)
-                if random.random() < prob:
-                    current_route = candidate_route
+        else:
+            prob = math.exp(cost_diff / T_curr)
+            if random.random() < prob:
+                current_route = candidate_route
     return -1
 
 def append_to_csv_description(description):
