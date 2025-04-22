@@ -1,0 +1,4 @@
+decay_func = 0 is exponential (T0*exp(-t/k)) decay_func = 1 is linear (T0-kt) decay_func = 2 is quadradic (T0-kt^2)
+T_init = 10.0 T_fin = 0.0 decay_k = 1.0 decay_func = 0 n_executions = 10 input = input/matriz_size_5.csv;2027;2027;2027;2027;2027;2027;2027;2027;2027;2027;steps:745
+T_init = 10.0 T_fin = 0.0 decay_k = 1.0 decay_func = 1 n_executions = 10 input = input/matriz_size_5.csv;2027;2027;2027;2157;2165;2165;2027;2027;2027;2027;steps:10
+T_init = 10.0 T_fin = 0.0 decay_k = 1.0 decay_func = 2 n_executions = 10 input = input/matriz_size_5.csv;2165;3505;2027;2027;2027;2157;2027;9223372036854776978;9223372036854778188;2027;steps:4
