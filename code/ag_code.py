@@ -6,10 +6,10 @@ import numpy as np
 MAX_SIZE = sys.maxsize
 
 # Number of cities 
-city_amount = 5
+city_amount = 15
 
 # Name of the cties
-genes = "ABCDE"
+genes = "ABCDEFGHIJKLMNO"
 
 # Staring node for search
 node_start = 0
@@ -80,14 +80,14 @@ def mutation(gnome):
 # Function to return a valid GNOME string
 # required to create the population
 def create_genome():
-    gnome = "0"
+    gnome = "A"
     while True:
         if len(gnome) == city_amount:
             gnome += gnome[0]
             break
         temp = rand_num(1, city_amount)
-        if not repeat(gnome, chr(temp + 48)):
-            gnome += chr(temp + 48)
+        if not repeat(gnome, chr(temp + 65)):
+            gnome += chr(temp + 65)
 
     return gnome
 
@@ -100,26 +100,44 @@ def cal_fitness(gnome, mp):
     f = 0
 
     for i in range(len(gnome) - 1):
-
-        if mp[ord(gnome[i]) - 48][ord(gnome[i + 1]) - 48] == MAX_SIZE:
+        if mp[ord(gnome[i]) - 65][ord(gnome[i + 1]) - 65] == MAX_SIZE:
             return MAX_SIZE
-        f += mp[ord(gnome[i]) - 48][ord(gnome[i + 1]) - 48]
+        f += mp[ord(gnome[i]) - 65][ord(gnome[i + 1]) - 65]
 
     return f
 
 def selection(population_size, fitness_scores):
     return(choices(range(population_size), weights=fitness_scores, k=2))
 
-def crossover(gene1, gene2):
-    split_size = len(gene1)
+def crossover(genome1, genome2):
 
-    gene1_start, gene1_end = gene1[:split_size], gene1[split_size:]
-    gene2_start, gene2_end = gene2[:split_size], gene2[split_size:]
+    gene1 = [ord(i)-65 for i in genome1]
+    gene2 = [ord(i)-65 for i in genome2]
 
-    new_gene1 = gene1_start + gene2_end
-    new_gene2 = gene2_start + gene1_end
+       
+    values = np.random.choice(gene1, size=3, replace=False) # random choice of values to rearrange
+        
+    gene1_index = [i for i in range(len(gene1)) if gene1[i] in values] # list of array indices of where the values appear
+    gene2_index = [i for i in range(len(gene1)) if gene2[i] in values]
 
-    return new_gene1, new_gene2
+    temp = [i for i in gene1 if i in values] # values in the order in which they appear in gene1
+                        
+    gene1[gene1_index[0]], gene1[gene1_index[1]], gene1[gene1_index[2]] = gene2[gene2_index[0]], gene2[gene2_index[1]], gene2[gene2_index[2]]
+    gene2[gene2_index[0]], gene2[gene2_index[1]], gene2[gene2_index[2]] = temp[0], temp[1], temp[2]
+
+    new_genome1 = ""
+    new_genome2 = ""
+
+    for j in gene1:
+        new_genome1 += chr(j+65)
+                                    
+    for k in gene2:
+        new_genome2 += chr(k+65)
+
+    return new_genome1, new_genome2
+
+
+
 
 def run_tsp(mp):
 
@@ -127,7 +145,7 @@ def run_tsp(mp):
     generation = 1
 
     # Number of genetic iterations
-    genetic_limit = 20
+    genetic_limit = 10
 
     # Crossover Threshold
     crossover_threshold = 0.8
@@ -152,13 +170,12 @@ def run_tsp(mp):
 
     fitness_scores = [indiv.fitness for indiv in population]
 
-    order = np.array(sorted([*enumerate(fitness_scores)], key=lambda x: x[1], reverse=True), dtype=int)[:, 0] 
+    order = np.array(sorted([*enumerate(fitness_scores)], key=lambda x: x[1], reverse=False), dtype=int)[:, 0] 
     population = [population[i] for i in order]
-    fitness_scores = sorted(fitness_scores, reverse=True)
+    fitness_scores = sorted(fitness_scores, reverse=False)
 
     while generation < genetic_limit:
         
-        population.sort(reverse=True)
         replaced = 1
         new_pop = population
 
@@ -195,9 +212,9 @@ def run_tsp(mp):
         population = new_pop
         fitness_scores = [indiv.fitness for indiv in population]
 
-        order = np.array(sorted([*enumerate(fitness_scores)], key=lambda x: x[1], reverse=True), dtype=int)[:, 0] 
+        order = np.array(sorted([*enumerate(fitness_scores)], key=lambda x: x[1], reverse=False), dtype=int)[:, 0] 
         population = [population[i] for i in order]
-        fitness_scores = sorted(fitness_scores, reverse=True)
+        fitness_scores = sorted(fitness_scores, reverse=False)
 
         print("generation:", generation)
         print("Genome   Fitness")
@@ -210,7 +227,7 @@ def run_tsp(mp):
 if __name__ == "__main__":
 
     # Read csv
-    mp = process_csv("./input/matriz_size_5.csv") 
+    mp = process_csv("./input/matriz_size_15.csv") 
 
     run_tsp(mp)
 
